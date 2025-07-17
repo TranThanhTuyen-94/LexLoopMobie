@@ -29,6 +29,9 @@
       height: 100vh;
       gap: 30px;
     }
+    #reviewScreen {
+      display: none !important;
+    }
     #reviewTitle {
       font-size: 4em;
       font-family: 'Rubik', sans-serif;
@@ -222,7 +225,6 @@
       currentIndex++;
       showWord();
     }
-
     document.getElementById('nextBtn').onclick = nextWord;
     document.getElementById('hintBtn').onclick = showHint;
     document.addEventListener('keydown', e => {
