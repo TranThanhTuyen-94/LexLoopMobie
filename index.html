@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LexLoop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #e3f2fd, #fff);
+      margin: 0;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+    #selectorScreen {
+      width: 100%;
+      max-width: 600px;
+      margin-top: 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    #reviewTitle {
+      font-size: 3em;
+      font-family: 'Rubik', sans-serif;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .startLine {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    #startBtn {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 1.4em;
+      font-weight: 600;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #startBtn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+    }
+    label {
+      font-size: 1.3em;
+      margin: 6px 0;
+      color: #1976D2;
+      font-weight: 500;
+    }
+    #sheetList {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: flex-start;
+    }
+    #reviewScreen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+    #wordDisplay {
+      font-size: 6em;
+      margin: 40px 0 20px;
+      font-family: 'Rubik', sans-serif;
+      color: #2E7D32;
+    }
+    #hintDisplay {
+      font-size: 1.5em;
+      color: #1976D2;
+      margin-bottom: 30px;
+    }
+    .buttonRow {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    button {
+      font-size: 1.6em;
+      padding: 20px 40px;
+      cursor: pointer;
+      border: none;
+      border-radius: 50px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    #hintBtn {
+      background: linear-gradient(135deg, #ffa726, #fb8c00);
+      color: white;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    #nextBtn {
+      background: linear-gradient(135deg, #42a5f5, #1565c0);
+      color: white;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+    #hintBtn:hover, #nextBtn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    #endList {
+      margin-top: 30px;
+      font-size: 1.2em;
+      max-width: 600px;
+      text-align: left;
+    }
+
+    @media (max-width: 600px) {
+      #reviewScreen, #selectorScreen {
+        max-width: 100%;
+      }
+      #wordDisplay {
+        font-size: 4em;
+      }
+      button {
+        font-size: 1.4em;
+        padding: 18px 35px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Landing screen -->
+  <div id="selectorScreen">
+    <h1 id="reviewTitle">⚡ LexLoop</h1>
+    <div class="startLine">
+      <button id="startBtn" onclick="startReview()">Start</button>
+    </div>
+    <div id="sheetList"></div>
+  </div>
+
+  <!-- Review screen -->
+  <div id="reviewScreen">
+    <h1>⚡ LexLoop</h1>
+    <div id="wordDisplay">...</div>
+    <div id="hintDisplay"></div>
+    <div class="buttonRow">
+      <button id="hintBtn">💡 Hint</button>
+      <button id="nextBtn">✅ Next</button>
+    </div>
+    <div id="endList"></div>
+  </div>
+
+  <script>
+    const sheetId = '1PGKAbRIC0fP7IFK1UWAmqgcGI6xFZ114OBJ2CSIiMHk';
+    const apiKey = 'AIzaSyDTI3yXucHM8LHQeSXJYYJJYVzufW0R6ik';
+
+    let selectedSheets = [], allWords = [], currentIndex = 0, hintedWords = [], hintShown = false;
+
+    const selectorScreen = document.getElementById('selectorScreen');
+    const reviewScreen = document.getElementById('reviewScreen');
+    const wordDisplay = document.getElementById('wordDisplay');
+    const hintDisplay = document.getElementById('hintDisplay');
+
+    async function loadSheetNames() {
+      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`);
+      const data = await res.json();
+      const sheetList = document.getElementById('sheetList');
+      data.sheets.forEach(sheet => {
+        const name = sheet.properties.title;
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${name}"/> ${name}`;
+        sheetList.appendChild(label);
+      });
+    }
+
+    async function startReview() {
+      const checkboxes = document.querySelectorAll('#sheetList input:checked');
+      selectedSheets = Array.from(checkboxes).map(cb => cb.value);
+      if (selectedSheets.length === 0) return alert("Please select at least one lesson.");
+      allWords = [];
+      for (const sheet of selectedSheets) {
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}?key=${apiKey}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        const words = data.values
+          .filter(row => row.length >= 3)
+          .map(row => ({
+            word: row[0],
+            hint: row[1] || '—',
+            meaning: row[2] || '—'
+          }));
+        allWords.push(...words);
+      }
+      currentIndex = 0;
+      hintedWords = [];
+      selectorScreen.style.display = 'none';
+      reviewScreen.style.display = 'flex';
+      showWord();
+    }
+
+    function showWord() {
+      hintDisplay.textContent = '';
+      hintShown = false;
+
+      if (currentIndex < allWords.length) {
+        wordDisplay.textContent = allWords[currentIndex].word;
+      } else {
+        wordDisplay.textContent = '🎉 Done!';
+        const listHTML = hintedWords.map(item =>
+          `<li><strong>${item.word}</strong><br><em>Hint:</em> ${item.hint}<br><em>Meaning:</em> ${item.meaning}</li>`
+        ).join('');
+        document.getElementById('endList').innerHTML = `
+          <h2>📚 Forgotten Words</h2>
+          <ul>${listHTML || '<li>None!</li>'}</ul>
+        `;
+      }
+    }
+
+    function showHint() {
+      const currentItem = allWords[currentIndex];
+      hintDisplay.textContent = `Hint: ${currentItem.hint}`;
+      hintShown = true;
+    }
+
+    function nextWord() {
+      if (hintShown && currentIndex < allWords.length) {
+        hintedWords.push(allWords[currentIndex]);
+      }
+      currentIndex++;
+      showWord();
+    }
+    document.getElementById('nextBtn').onclick = nextWord;
+    document.getElementById('hintBtn').onclick = showHint;
+    document.addEventListener('keydown', e => {
+      if (e.code === 'Space') showHint();
+      if (e.code === 'ArrowRight') nextWord();
+    });
+
+    loadSheetNames();
+  </script>
+
+</body>
+</html>
