@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>LexLoop</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
@@ -129,7 +130,7 @@
         align-items: center;
         text-align: center;
       }
-      #reviewTitle, #wordDisplay, #hintDisplay, label, button {
+      h1, #wordDisplay, #hintDisplay, label, button {
         font-size: 200%;
       }
       #startBtn {
@@ -234,14 +235,15 @@
       }
     }
 
-function showHint() {
-  if (!allWords.length || currentIndex >= allWords.length) return;
-  const currentItem = allWords[currentIndex];
-  if (!hintShown) {
-    hintDisplay.textContent = `Hint: ${currentItem.hint}`;
-    hintShown = true;
-  }
-}
+    // ✅ Updated hint logic to prevent first-load bug
+    function showHint() {
+      if (!allWords.length || currentIndex >= allWords.length) return;
+      const currentItem = allWords[currentIndex];
+      if (!hintShown) {
+        hintDisplay.textContent = `Hint: ${currentItem.hint}`;
+        hintShown = true;
+      }
+    }
 
     function nextWord() {
       if (hintShown && currentIndex < allWords.length) {
@@ -250,17 +252,16 @@ function showHint() {
       currentIndex++;
       showWord();
     }
-    document.getElementById('nextBtn').onclick = nextWord;
-    document.getElementById('hintBtn').onclick = showHint;
 
-document.addEventListener('keydown', e => {
-  if (reviewScreen.style.display === 'flex') {
-    if (e.code === 'Space') showHint();
-    if (e.code === 'ArrowRight') nextWord();
-  }
-});
+    // ✅ Updated keyboard logic with screen check
+    document.addEventListener('keydown', e => {
+      if (reviewScreen.style.display === 'flex') {
+        if (e.code === 'Space') showHint();
+        if (e.code === 'ArrowRight') nextWord();
+      }
+    });
 
-    loadSheetNames();
+    window.onload = loadSheetNames;
   </script>
 </body>
 </html>
