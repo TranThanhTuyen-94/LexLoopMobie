@@ -252,6 +252,8 @@
       currentIndex++;
       showWord();
     }
+    document.getElementById('hintBtn').onclick = showHint;
+    document.getElementById('nextBtn').onclick = nextWord;
 
     // ✅ Updated keyboard logic with screen check
     document.addEventListener('keydown', e => {
