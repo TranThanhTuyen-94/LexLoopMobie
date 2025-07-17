@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8" />
   <title>LexLoop</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap" rel="stylesheet">
   <style>
     body {
@@ -16,27 +15,22 @@
       flex-direction: column;
       align-items: center;
       padding: 0 20px;
-      box-sizing: border-box;
     }
-    #selectorScreen, #reviewScreen {
+    #selectorScreen {
       width: 100%;
-      max-width: 100%;
+      max-width: 600px;
+      margin-top: 60px;
       display: flex;
       flex-direction: column;
+      gap: 20px;
       align-items: center;
-      justify-content: center;
       text-align: center;
-      height: 100vh;
-      gap: 30px;
-    }
-    #reviewScreen {
-      display: none !important;
     }
     #reviewTitle {
-      font-size: 4em;
+      font-size: 3em;
       font-family: 'Rubik', sans-serif;
-      margin-bottom: 20px;
-      color: #1565c0;
+      text-align: center;
+      margin-bottom: 10px;
     }
     .startLine {
       display: flex;
@@ -46,11 +40,11 @@
     #startBtn {
       background: linear-gradient(135deg, #4CAF50, #2E7D32);
       color: white;
-      width: 120px;
-      height: 120px;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      font-size: 1.6em;
-      font-weight: bold;
+      font-size: 1.2em;
+      font-weight: 600;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -64,64 +58,92 @@
       box-shadow: 0 6px 14px rgba(0,0,0,0.2);
     }
     label {
-      font-size: 2em;
+      font-size: 1.3em;
+      margin: 6px 0;
       color: #1976D2;
+      font-weight: 500;
     }
     #sheetList {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 6px;
       align-items: center;
     }
+    #reviewScreen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      text-align: center;
+    }
     #wordDisplay {
-      font-size: 7em;
+      font-size: 6em;
+      margin: 40px 0 20px;
       font-family: 'Rubik', sans-serif;
       color: #2E7D32;
     }
     #hintDisplay {
-      font-size: 2em;
+      font-size: 1.5em;
       color: #1976D2;
-      margin-top: -20px;
+      margin-bottom: 30px;
     }
     .buttonRow {
       display: flex;
       justify-content: center;
-      gap: 30px;
+      gap: 20px;
       flex-wrap: wrap;
     }
     button {
-      font-size: 2em;
-      padding: 25px 50px;
+      font-size: 1.5em;
+      padding: 15px 35px;
       cursor: pointer;
       border: none;
-      border-radius: 60px;
+      border-radius: 40px;
       transition: transform 0.2s, box-shadow 0.2s;
     }
     #hintBtn {
       background: linear-gradient(135deg, #ffa726, #fb8c00);
       color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     }
     #nextBtn {
       background: linear-gradient(135deg, #42a5f5, #1565c0);
       color: white;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
     }
     #hintBtn:hover, #nextBtn:hover {
       transform: scale(1.05);
-      box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
     #endList {
-      font-size: 1.6em;
-      max-width: 800px;
-      margin-top: 40px;
+      margin-top: 30px;
+      font-size: 1.2em;
+      max-width: 600px;
       text-align: left;
     }
+
+    /* ✅ Mobile view adjustments */
     @media (max-width: 480px) {
-      #reviewTitle { font-size: 3em; }
-      #wordDisplay { font-size: 5em; }
-      button { font-size: 1.8em; padding: 20px 40px; }
-      label { font-size: 1.8em; }
+      body, #selectorScreen, #reviewScreen {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      #reviewTitle, #wordDisplay, #hintDisplay, label, button {
+        font-size: 200%;
+      }
+      #startBtn {
+        width: 160px;
+        height: 160px;
+        font-size: 2.4em;
+      }
+      button {
+        padding: 30px 70px;
+        border-radius: 60px;
+      }
+      #endList {
+        font-size: 1.8em;
+      }
     }
   </style>
 </head>
@@ -136,7 +158,7 @@
   </div>
 
   <div id="reviewScreen">
-    <h1 id="reviewTitle">⚡ LexLoop</h1>
+    <h1>⚡ LexLoop</h1>
     <div id="wordDisplay">...</div>
     <div id="hintDisplay"></div>
     <div class="buttonRow">
@@ -227,6 +249,7 @@
     }
     document.getElementById('nextBtn').onclick = nextWord;
     document.getElementById('hintBtn').onclick = showHint;
+
     document.addEventListener('keydown', e => {
       if (e.code === 'Space') showHint();
       if (e.code === 'ArrowRight') nextWord();
@@ -234,6 +257,5 @@
 
     loadSheetNames();
   </script>
-
 </body>
 </html>
