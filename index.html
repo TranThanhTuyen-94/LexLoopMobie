@@ -216,12 +216,30 @@
       const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`);
       const data = await res.json();
       const sheetList = document.getElementById('sheetList');
-      data.sheets.forEach(sheet => {
-        const name = sheet.properties.title;
-        const label = document.createElement('label');
-        label.innerHTML = `<input type="checkbox" value="${name}"/> ${name}`;
-        sheetList.appendChild(label);
-      });
+const dateContainer = document.createElement('div');
+dateContainer.id = 'dateContainer';
+
+const leftColumn = document.createElement('div');
+const rightColumn = document.createElement('div');
+leftColumn.className = 'dateColumn';
+rightColumn.className = 'dateColumn';
+
+data.sheets.forEach((sheet, index) => {
+  const name = sheet.properties.title;
+  const label = document.createElement('label');
+  label.innerHTML = `<input type="checkbox" value="${name}"/> ${name}`;
+
+  if (index < 8) {
+    leftColumn.appendChild(label);
+  } else {
+    rightColumn.appendChild(label);
+  }
+});
+
+dateContainer.appendChild(leftColumn);
+dateContainer.appendChild(rightColumn);
+sheetList.appendChild(dateContainer);
+
     }
 
     async function startReview() {
