@@ -283,40 +283,42 @@
   }
 }
 
-    async function startReview() {
-      const checkboxes = document.querySelectorAll('#sheetList input:checked');
-      selectedSheets = Array.from(checkboxes).map(cb => cb.value);
-      if (selectedSheets.length === 0) return alert("Please select at least one lesson.");
-      allWords = [];
-      for (const sheet of selectedSheets) {
-        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}?key=${apiKey}`;
-try {
-  const res = await fetch(url);
-  const data = await res.json();
-  console.log(`Data from sheet "${sheet}":`, data);
-  // Continue with word parsing...
-} catch (error) {
-  console.error(`Error loading sheet "${sheet}":`, error);
-  alert(`Failed to load data from sheet "${sheet}".`);
-}
+   async function startReview() {
+  const checkboxes = document.querySelectorAll('#sheetList input:checked');
+  selectedSheets = Array.from(checkboxes).map(cb => cb.value);
+  if (selectedSheets.length === 0) return alert("Please select at least one lesson.");
 
-        const words = data.values
-          .filter(row => row.length >= 3)
-          .map(row => ({
-            word: row[0],
-            hint: row[1] || '—',
-            meaning: row[2] || '—'
-          }));
-        allWords.push(...words);
-        shuffleArray(allWords);
-      }
-      currentIndex = 0;
-      hintedWords = [];
-      selectorScreen.style.display = 'none';
-      reviewScreen.style.display = 'flex';
-      showWord();
+  allWords = [];
+
+  for (const sheet of selectedSheets) {
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}?key=${apiKey}`;
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+      console.log(`Data from sheet "${sheet}":`, data);
+
+      const words = data.values
+        .filter(row => row.length >= 3)
+        .map(row => ({
+          word: row[0],
+          hint: row[1] || '—',
+          meaning: row[2] || '—'
+        }));
+
+      allWords.push(...words);
+      shuffleArray(allWords);
+    } catch (error) {
+      console.error(`Error loading sheet "${sheet}":`, error);
+      alert(`Failed to load data from sheet "${sheet}".`);
     }
+  }
 
+  currentIndex = 0;
+  hintedWords = [];
+  selectorScreen.style.display = 'none';
+  reviewScreen.style.display = 'flex';
+  showWord();
+}
 function showWord() {
   hintDisplay.textContent = '';
   hintShown = false;
@@ -381,6 +383,7 @@ function showWord() {
   </script>
 </body>
 </html>
+
 
 
 
