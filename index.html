@@ -7,6 +7,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap" rel="stylesheet">
   <style>
+    #gameBtn {
+  background: linear-gradient(135deg, #8e24aa, #6a1b9a);
+  color: white;
+  font-size: 1.5em;
+  padding: 15px 35px;
+  border-radius: 40px;
+  text-decoration: none;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#gameBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
     #dateContainer {
   display: flex;
   justify-content: space-between;
@@ -197,10 +215,11 @@
     <h1>⚡ LexLoop</h1>
     <div id="wordDisplay">...</div>
     <div id="hintDisplay"></div>
-    <div class="buttonRow">
-      <button id="hintBtn">💡 Hint</button>
-      <button id="nextBtn">✅ Next</button>
-    </div>
+<div class="buttonRow" id="gameButtonRow" style="display: none;">
+  <a href="game.html" id="gameBtn">
+    🎮 Game
+  </a>
+</div>
     <div id="endList"></div>
   </div>
 
@@ -277,23 +296,37 @@ sheetList.appendChild(dateContainer);
       showWord();
     }
 
-    function showWord() {
-      hintDisplay.textContent = '';
-      hintShown = false;
+function showWord() {
+  hintDisplay.textContent = '';
+  hintShown = false;
 
-      if (currentIndex < allWords.length) {
-        wordDisplay.textContent = allWords[currentIndex].word;
-      } else {
-        wordDisplay.textContent = '🎉 Done!';
-        const listHTML = hintedWords.map(item =>
-          `<li><strong>${item.word}</strong><br><em>Hint:</em> ${item.hint}<br><em>Meaning:</em> ${item.meaning}</li>`
-        ).join('');
-        document.getElementById('endList').innerHTML = `
-          <h2>📚 Forgotten Words</h2>
-          <ul>${listHTML || '<li>None!</li>'}</ul>
-        `;
-      }
-    }
+  if (currentIndex < allWords.length) {
+    wordDisplay.textContent = allWords[currentIndex].word;
+
+    // Show Hint and Next buttons
+    document.getElementById('hintBtn').style.display = 'inline-block';
+    document.getElementById('nextBtn').style.display = 'inline-block';
+
+    // Hide Game button
+    document.getElementById('gameButtonRow').style.display = 'none';
+  } else {
+    wordDisplay.textContent = '🎉 Done!';
+    const listHTML = hintedWords.map(item =>
+      `<li><strong>${item.word}</strong><br><em>Hint:</em> ${item.hint}<br><em>Meaning:</em> ${item.meaning}</li>`
+    ).join('');
+    document.getElementById('endList').innerHTML = `
+      <h2>📚 Forgotten Words</h2>
+      <ul>${listHTML || '<li>None!</li>'}</ul>
+    `;
+
+    // Hide Hint and Next buttons
+    document.getElementById('hintBtn').style.display = 'none';
+    document.getElementById('nextBtn').style.display = 'none';
+
+    // Show Game button
+    document.getElementById('gameButtonRow').style.display = 'flex';
+  }
+}
 
     // ✅ Updated hint logic to prevent first-load bug
     function showHint() {
@@ -327,6 +360,7 @@ sheetList.appendChild(dateContainer);
   </script>
 </body>
 </html>
+
 
 
 
