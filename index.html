@@ -255,7 +255,8 @@ try {
 } catch (error) {
   console.error("Error loading sheet names:", error);
   alert("Failed to load sheet names. Please check your API key or sheet access.");
-}async function loadSheetNames() {
+}
+      async function loadSheetNames() {
   try {
     const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`);
     const data = await res.json();
@@ -390,6 +391,7 @@ function showWord() {
   </script>
 </body>
 </html>
+
 
 
 
