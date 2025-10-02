@@ -245,8 +245,17 @@
     const hintDisplay = document.getElementById('hintDisplay');
 
     async function loadSheetNames() {
-      const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`);
-      const data = await res.json();
+try {
+  const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`);
+  const data = await res.json();
+  console.log("Sheet metadata:", data);
+  // Continue with your sheet rendering logic...
+} catch (error) {
+  console.error("Error loading sheet names:", error);
+  alert("Failed to load sheet names. Please check your API key or sheet access.");
+}
+
+       console.log("Sheet metadata:", data)
       console.log(data); // 👈 Add this line after `const data = await res.json();`
       const sheetList = document.getElementById('sheetList');
 const dateContainer = document.createElement('div');
@@ -282,8 +291,16 @@ sheetList.appendChild(dateContainer);
       allWords = [];
       for (const sheet of selectedSheets) {
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}?key=${apiKey}`;
-        const res = await fetch(url);
-        const data = await res.json();
+try {
+  const res = await fetch(url);
+  const data = await res.json();
+  console.log(`Data from sheet "${sheet}":`, data);
+  // Continue with word parsing...
+} catch (error) {
+  console.error(`Error loading sheet "${sheet}":`, error);
+  alert(`Failed to load data from sheet "${sheet}".`);
+}
+
         const words = data.values
           .filter(row => row.length >= 3)
           .map(row => ({
@@ -365,6 +382,7 @@ function showWord() {
   </script>
 </body>
 </html>
+
 
 
 
