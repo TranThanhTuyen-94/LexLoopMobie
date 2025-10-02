@@ -290,7 +290,7 @@
 
   allWords = [];
 
- for (const sheet of selectedSheets) {
+for (const sheet of selectedSheets) {
   const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheet}?key=${apiKey}`;
   try {
     const res = await fetch(url);
@@ -312,7 +312,6 @@
     alert(`Failed to load data from sheet "${sheet}".`);
   }
 }
-
 
   currentIndex = 0;
   hintedWords = [];
@@ -384,6 +383,7 @@ function showWord() {
   </script>
 </body>
 </html>
+
 
 
 
