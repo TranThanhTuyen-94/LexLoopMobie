@@ -243,6 +243,7 @@
     async function loadSheetNames() {
       const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}?key=${apiKey}`);
       const data = await res.json();
+      console.log(data); // 👈 Add this line after `const data = await res.json();`
       const sheetList = document.getElementById('sheetList');
 const dateContainer = document.createElement('div');
 dateContainer.id = 'dateContainer';
@@ -360,6 +361,7 @@ function showWord() {
   </script>
 </body>
 </html>
+
 
 
 
