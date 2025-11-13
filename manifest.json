@@ -1,0 +1,20 @@
+{
+  "name": "🐾 Wordie",
+  "short_name": "Wordie",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f7faff",
+  "theme_color": "#e9f3ff",
+  "icons": [
+    {
+      "src": "assets/wordie-icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/wordie-icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
