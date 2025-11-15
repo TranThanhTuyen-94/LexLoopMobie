@@ -8,7 +8,6 @@
 <link rel="icon" type="image/png" href="assets/wordie-icon.png">
 <link rel="apple-touch-icon" href="assets/wordie-icon.png">
 <link rel="manifest" href="manifest.json">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500&display=swap" rel="stylesheet">
   <style>
     html {
@@ -24,7 +23,6 @@ body {
   flex-direction: column;
   align-items: stretch;
   padding: 0 20px;
-  overflow: hidden; /* Giữ nguyên */
 }
       padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
@@ -165,6 +163,11 @@ body {
       padding: 40px 20px;
       text-align: center;
     }
+    #reviewScreen {
+  flex: 1; /* chiếm phần còn lại của body */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* cho iOS */
+}
 
     #wordDisplay {
       font-size: 6em;
@@ -459,6 +462,7 @@ body {
   </script>
 </body>
 </html>
+
 
 
 
